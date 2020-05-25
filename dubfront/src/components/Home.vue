@@ -1,7 +1,6 @@
 <template>
   <div class="home">
   <v-card
-    max-width="400"
     class="mx-auto"
   >
  <v-app-bar

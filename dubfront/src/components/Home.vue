@@ -50,6 +50,14 @@
           </v-card>
         </v-col>
         <v-col cols="12">
+                <v-lazy
+        v-model="isActive"
+        :options="{
+          threshold: .5
+        }"
+        min-height="200"
+        transition="fade-transition"
+      >
           <v-card
             color="#385F73"
             dark
@@ -60,6 +68,7 @@
               <v-btn text>试试看</v-btn>
             </v-card-actions>
           </v-card>
+          </v-lazy>
         </v-col>
 
         <v-col

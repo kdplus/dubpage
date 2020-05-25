@@ -43,6 +43,7 @@ def update_ones_films(userId="5216981"):
         sign = get_md5((param + extra).encode("utf8"))
         url = api+param+"&sign="+sign
         restdata = getUrllibFun(url)
+        print(url)
         new_jret = json.loads(restdata)["data"]
         if len(new_jret) == 0:
             break

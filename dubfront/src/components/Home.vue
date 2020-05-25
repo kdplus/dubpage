@@ -1,27 +1,9 @@
 <template>
   <div class="home">
-    <!-- <el-row display="margin-top:10px">
-        <el-input v-model="input" placeholder="请输入秀秀ID" style="display:inline-table; width: 30%; float:left"></el-input>
-        <el-button type="primary" @click="addUser()" style="float:left; margin: 2px;">新增</el-button>
-        <el-button type="primary" @click="showFilms()" style="float:left; margin: 2px;">搜索</el-button>
-    </el-row> -->
-      <v-card
+  <v-card
     max-width="400"
     class="mx-auto"
   >
-    <!-- <v-system-bar
-      color="pink darken-2"
-      dark
-    >
-      <v-spacer></v-spacer>
-
-      <v-icon>mdi-window-minimize</v-icon>
-
-      <v-icon>mdi-window-maximize</v-icon>
-
-      <v-icon>mdi-close</v-icon>
-    </v-system-bar> -->
-
  <v-app-bar
       absolute
       color="teal lighten-3"

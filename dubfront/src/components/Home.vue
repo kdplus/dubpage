@@ -23,6 +23,7 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
+
     <v-sheet
       id="scrolling-techniques-4"
       class="overflow-y-auto"
@@ -39,6 +40,16 @@
             <v-card-subtitle>不需要登录app，即可在web上观看作品，秀秀插件的第一步。</v-card-subtitle>
           </v-card>
         </v-col>
+        <!-- <v-btn
+  class="md-5 mr-3 elevation-21"
+  dark
+  fab
+  button
+  right
+  color="indigo darken-3"
+  fixed
+  @click="top"
+></v-btn> -->
           <!-- <v-lazy
             v-model="isActive"
             :options="{
@@ -107,6 +118,21 @@
       </v-container>
     </v-sheet>
   </v-card>
+            <v-card-text style="height: 100px; position: relative">
+            <v-fab-transition>
+              <v-btn
+                v-show="!hidden"
+                color="pink"
+                dark
+                absolute
+                top
+                right
+                fab
+              >
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-fab-transition>
+          </v-card-text>
   </div>
 </template>
 
@@ -133,11 +159,14 @@ export default {
       total: 0,
       pagesize: 10,
       isActive: false,
-      currentPage: 1
+      currentPage: 0,
+      noData: false,
+      update: true
     }
   },
   mounted: function () {
     this.showFilms()
+    this.scroll()
   },
   methods: {
     addUser () {
@@ -156,19 +185,58 @@ export default {
         })
     },
     showFilms () {
-      this.$axios.get('http://127.0.0.1:8000/api/show_films?user_id=' + this.input)
+      if (this.update === true) {
+        this.currentPage = 0
+        this.noData = false
+      }
+      this.$axios.get('http://127.0.0.1:8000/api/show_films?user_id=' + this.input + '&page=' + this.currentPage)
         .then((res) => {
           res = res.data
           // console.log(res)
           if (res.error_num === 0) {
-            this.filmList = res['films'].slice(0, 50)
-            this.total = this.filmList.length
-            console.log(this.total)
+            if (res['films'].length === 0) {
+              this.noData = true
+            } else {
+              if (this.update === false) {
+                this.filmList = this.filmList.concat(res['films'])
+              } else {
+                this.filmList = res['films']
+              }
+              this.total = this.filmList.length
+            }
+            console.log(this.update, this.filmList, this.total, res['films'].length)
+            this.update = true
           } else {
-            this.$message.error('查询作品失败')
             console.log(res['msg'])
+            this.$message.error('查询作品失败')
+            this.update = true
           }
         })
+    },
+    scroll () {
+      let isLoading = false
+      window.onscroll = () => {
+        let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= 200
+        if (bottomOfWindow && isLoading === false && this.noData === false) {
+          isLoading = true
+          // axios.get(`https://randomuser.me/api/`).then(response => {
+          //   person.push(response.data.results[0])
+          //   isLoading = false
+          // })
+          this.currentPage += 1
+          this.update = false
+          this.showFilms()
+          console.log('Yes')
+          isLoading = false
+        }
+      }
+    },
+    top () {
+      window.scrollTo(0, 0)
+    },
+    beforeMount () {
+      // 在页面挂载前就发起请求
+      this.showFilms()
     }
     // current_change: function (currentPage) {
     //   this.currentPage = currentPage

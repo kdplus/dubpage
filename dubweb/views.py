@@ -105,17 +105,24 @@ def show_films(request):
     response = {}
     try:
         input_user_id = request.GET.get('user_id')
+        page = request.GET.get('page')
+        page = int(page)
+        page_s = 30
+        start = page * page_s
+        end = start+page_s
+        print(start, end)
         user = None
         if input_user_id != "":
             user = get_object_or_404(UserProfile, user_id=input_user_id)
             films = Film.objects.filter(user=user).extra(
                 select={'film_id_i': 'CAST(film_id AS INTEGER)'}
-            ).order_by('film_id_i')[::-1]
+            ).order_by('film_id_i')[::-1][start:end]
         else:
             films = Film.objects.extra(
                 select={'film_id_i': 'CAST(film_id AS INTEGER)'}
-            ).order_by('film_id_i')[::-1]
+            ).order_by('film_id_i')[::-1][start:end]
         response['films'] = json.loads(serializers.serialize("json", films))
+        print(len(response['films']))
         for f in response['films']:
             userpk = f['fields']['user']
             user = get_object_or_404(UserProfile, user_id=userpk)

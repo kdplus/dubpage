@@ -118,21 +118,17 @@
       </v-container>
     </v-sheet>
   </v-card>
-            <v-card-text style="height: 100px; position: relative">
-            <v-fab-transition>
-              <v-btn
-                v-show="!hidden"
-                color="pink"
-                dark
-                absolute
-                top
-                right
-                fab
-              >
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-            </v-fab-transition>
-          </v-card-text>
+      <v-btn
+        color="pink"
+        dark
+        small
+        absolute
+        bottom
+        left
+        fab
+      >
+<v-icon v-if="btnFlag" class="go-top" @click="backTop"> mdi-plus </v-icon>
+    </v-btn>
   </div>
 </template>
 
@@ -167,7 +163,12 @@ export default {
   mounted: function () {
     this.showFilms()
     this.scroll()
+    window.addEventListener('scroll', this.scrollToTop)
   },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollToTop)
+  },
+
   methods: {
     addUser () {
       console.log(this.input)
@@ -233,6 +234,29 @@ export default {
     },
     top () {
       window.scrollTo(0, 0)
+    },
+
+    backTop () {
+      const that = this
+      let timer = setInterval(() => {
+        let ispeed = Math.floor(-that.scrollTop / 5)
+        document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed
+        if (that.scrollTop === 0) {
+          clearInterval(timer)
+        }
+      }, 16)
+    },
+
+    // 为了计算距离顶部的高度，当高度大于60显示回顶部图标，小于60则隐藏
+    scrollToTop () {
+      const that = this
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      that.scrollTop = scrollTop
+      if (that.scrollTop > 0) {
+        that.btnFlag = true
+      } else {
+        that.btnFlag = false
+      }
     },
     beforeMount () {
       // 在页面挂载前就发起请求

@@ -118,7 +118,7 @@
       </v-container>
     </v-sheet>
   </v-card>
-      <v-btn
+      <!-- <v-btn
         color="pink"
         dark
         small
@@ -128,7 +128,7 @@
         fab
       >
 <v-icon v-if="btnFlag" class="go-top" @click="backTop"> mdi-plus </v-icon>
-    </v-btn>
+    </v-btn> -->
   </div>
 </template>
 
